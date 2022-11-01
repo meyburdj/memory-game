@@ -45,39 +45,43 @@ function createCards(colors) {
     card.style.backgroundColor = 'black';
 
     card.addEventListener("click", function () {
-      card.style.backgroundColor = `${color}`;
-      cardClicked++;
-      if (cardClicked === 1) {
+
+      if (cardClicked === 0) {
+        card.style.backgroundColor = `${color}`;
         cardColor = `${color}`
+        cardClicked++
+        cardLast = card;
+        console.log(cardClicked);
+        console.log(cardColor);
+        console.log(cardLast)
       }
-      console.log(cardLast)
-      console.log(cardColor);
-      console.log(cardClicked);
 
-      if (cardClicked === 2 && cardColor !== color) {
-        // setTimeout(() => {
-        card.style.backgroundColor = "black";
-        cardLast.style.backgroundColor = "black";
-        // }, 1000);
 
+      else if (cardClicked === 1 && cardColor !== color) {
+        card.style.backgroundColor = `${color}`;
+        setTimeout(function () {
+          card.style.backgroundColor = "black";
+          cardLast.style.backgroundColor = "black";
+          cardColor = undefined;
+          cardClicked = 0;
+          cardLast = undefined;
+        }, 1000);
 
       }
-      if (cardClicked === 2 && cardColor === color) {
+
+      else if (cardClicked === 1 && cardColor === color) {
+        card.style.backgroundColor = `${color}`;
         //remove eventlistener
+        cardColor = undefined;
+        cardClicked = 0;
+        cardLast = undefined;
 
       }
-      if (cardClicked === 2) {
-        cardClicked = 0;
-        cardColor = undefined;
-      }
-      cardLast = card;
-      // cardColor = `${color}`
-      console.log(cardColor)
+
     });
     gameBoard.appendChild(card);
   }
-  console.log(cardColor);
-  console.log(cardClicked);
+
 }
 
 /** Flip a card face-up. */
