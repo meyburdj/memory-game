@@ -44,7 +44,8 @@ function createCards(colors) {
     const card = document.createElement("div");
     card.style.backgroundColor = 'black';
 
-    card.addEventListener("click", function () {
+    card.addEventListener("click", handleCardClick)
+    function handleCardClick() {
 
       if (cardClicked === 0) {
         card.style.backgroundColor = `${color}`;
@@ -69,16 +70,17 @@ function createCards(colors) {
 
       }
 
-      else if (cardClicked === 1 && cardColor === color) {
+      else if (cardClicked === 1 && cardColor === color && card !== cardLast) {
         card.style.backgroundColor = `${color}`;
-        //remove eventlistener
+        card.removeEventListener("click", handleCardClick);
+        cardLast.removeEventListener("click", handleCardClick);
         cardColor = undefined;
         cardClicked = 0;
         cardLast = undefined;
 
       }
 
-    });
+    };
     gameBoard.appendChild(card);
   }
 
@@ -98,6 +100,6 @@ function unFlipCard(card) {
 
 /** Handle clicking on a card: this could be first-card or second-card. */
 
-function handleCardClick(evt) {
-  // ... you need to write this ...
-}
+// function handleCardClick(evt) {
+//   // ... you need to write this ...
+// }
