@@ -15,6 +15,8 @@ let score = 0;
 console.log(score)
 let scoreHi = 0;
 let time = 0;
+let lockBoard = false;
+let correctGuess = 0;
 
 createCards(images);
 createScoreBoard();
@@ -36,6 +38,7 @@ function shuffle(items) {
 //create cards. respond to first click, second click matchd, and second click unmatched.
 
 function createCards(images) {
+
   const gameBoard = document.getElementById("game");
 
 
@@ -57,7 +60,7 @@ function createCards(images) {
     //create three click pathways
     card.addEventListener("click", handleCardClick)
     function handleCardClick() {
-
+      if (lockBoard) return;
       //action if first card flipped
       if (cardClicked === 0) {
         card.src = `${image}`;
@@ -71,6 +74,7 @@ function createCards(images) {
 
       //if second card flipped isn't a match, unflip both
       else if (cardClicked === 1 && cardImage !== image) {
+        lockBoard = true;
         card.src = `${image}`;
         setTimeout(function () {
           card.src = unflipImg
@@ -78,7 +82,9 @@ function createCards(images) {
           cardImage = undefined;
           cardClicked = 0;
           cardLast = undefined;
+          lockBoard = false;
         }, 1000);
+
       }
 
       //if second card flipped is a match leave flipped
@@ -89,6 +95,10 @@ function createCards(images) {
         cardImage = undefined;
         cardClicked = 0;
         cardLast = undefined;
+        correctGuess++;
+        if (correctGuess === 6) {
+          clearInterval(timer);
+        }
       }
       score++;
       document.getElementById("score-text").innerHTML = "Amount of Guesses: " + score;
@@ -115,12 +125,14 @@ function createScoreBoard() {
   timer.innerHTML = "Time: " + time + " seconds";
   scoreBoardDiv.appendChild(timer);
   scoreBoardDiv.appendChild(scoreText);
-  scoreBoardDiv.appendChild(scoreHiText);
+  // scoreBoardDiv.appendChild(scoreHiText);
   scoreBoard.appendChild(scoreBoardDiv);
 }
 
 // function clock() {
-setInterval(function () { time++; document.getElementById("timer").innerHTML = "Time: " + time + " seconds" }, 1000);
+
+let timer = setInterval(function () { time++; document.getElementById("timer").innerHTML = "Time: " + time + " seconds" }, 1000);
+timer;
 
 
 
