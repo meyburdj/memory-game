@@ -1,7 +1,11 @@
 "use strict";
 
+
+
 /** Memory game: find matching pairs of cards and flip both of them. */
 
+
+//all of the eventual cards
 const FOUND_MATCH_WAIT_MSECS = 1000;
 const IMAGES = [
   "assets/smol_1.png", "assets/smol_2.png", "assets/smol_3.png",
@@ -10,21 +14,29 @@ const IMAGES = [
   "assets/smol_4.png", "assets/smol_5.png", "assets/smol_6.png"
 ];
 
+//stored global variables 
 const images = shuffle(IMAGES);
 let score = 0;
-console.log(score)
 let scoreHi = 0;
 let time = 0;
 let lockBoard = false;
 let correctGuess = 0;
 
-createCards(images);
-createScoreBoard();
+// create the game design. assign images to cards. create scoreboard
+let startBtn = document.getElementById("start-btn");
+startBtn.addEventListener("click", () => {
+  createGameStart();
+  createCards(images);
+  createScoreBoard();
+  let startSequence = document.getElementById("start-sequence");
+  startSequence.remove();
+})
 console.log(images);
 
 
 /** Shuffle array items in-place and return shuffled array. */
 
+//randomly shuffle the items an assign to cards
 function shuffle(items) {
 
   for (let i = items.length - 1; i > 0; i--) {
@@ -41,11 +53,10 @@ function createCards(images) {
 
   const gameBoard = document.getElementById("game");
 
-
-
   let cardClicked = 0;
   let cardImage = undefined;
   let cardLast = undefined;
+  let gameStart = 0;
 
 
   for (let image of images) {
@@ -67,6 +78,10 @@ function createCards(images) {
         cardImage = `${image}`
         cardClicked++
         cardLast = card;
+        gameStart++;
+        if (gameStart === 1) {
+          setInterval(function () { time++; document.getElementById("timer").innerHTML = "Time: " + time + " seconds" }, 1000);
+        }
         console.log(cardClicked);
         console.log(cardImage);
         console.log(cardLast)
@@ -75,6 +90,7 @@ function createCards(images) {
       //if second card flipped isn't a match, unflip both
       else if (cardClicked === 1 && cardImage !== image) {
         lockBoard = true;
+
         card.src = `${image}`;
         setTimeout(function () {
           card.src = unflipImg
@@ -84,7 +100,7 @@ function createCards(images) {
           cardLast = undefined;
           lockBoard = false;
         }, 1000);
-
+        score++;
       }
 
       //if second card flipped is a match leave flipped
@@ -96,12 +112,13 @@ function createCards(images) {
         cardClicked = 0;
         cardLast = undefined;
         correctGuess++;
+        score++;
         if (correctGuess === 6) {
           clearInterval(timer);
         }
       }
-      score++;
-      document.getElementById("score-text").innerHTML = "Amount of Guesses: " + score;
+
+      document.getElementById("score-text").innerHTML = "Guesses: " + score;
       console.log(score);
 
     };
@@ -117,67 +134,38 @@ function createScoreBoard() {
   let scoreText = document.createElement("p");
   scoreText.setAttribute("id", "score-text");
   let scoreHiText = document.createElement("p");
-  let timer = document.createElement("p");
-  timer.setAttribute("id", "timer");
+  let timerText = document.createElement("p");
+  timerText.setAttribute("id", "timer");
   scoreHiText.setAttribute("id", "score-hi-text");
-  scoreText.innerHTML = "Amount of Guesses: " + score;
+  scoreText.innerHTML = "Guesses: " + score;
   scoreHiText.innerText = scoreHi;
-  timer.innerHTML = "Time: " + time + " seconds";
-  scoreBoardDiv.appendChild(timer);
+  timerText.innerHTML = "Time: " + time + " seconds";
+  scoreBoardDiv.appendChild(timerText);
   scoreBoardDiv.appendChild(scoreText);
   // scoreBoardDiv.appendChild(scoreHiText);
   scoreBoard.appendChild(scoreBoardDiv);
 }
 
-// function clock() {
+function createGameStart() {
+  let containerScore = document.createElement("div");
+  containerScore.className = "container bg-dark";
+  let scoreDiv = document.createElement("h3");
+  scoreDiv.className = "text-center";
+  scoreDiv.id = "scores";
+  scoreDiv.style = "color:yellow";
 
-let timer = setInterval(function () { time++; document.getElementById("timer").innerHTML = "Time: " + time + " seconds" }, 1000);
-timer;
+  let containerGame = document.createElement("div");
+  containerGame.className = "container";
+  containerGame.style = "max-width: 750px; border: 15px";
 
+  let gameDiv = document.createElement("div");
+  gameDiv.className = "row row-cols-4";
+  gameDiv.id = "game";
 
-
-// function createScoreBoard(score, hiScore) {
-//   let scoreBoard = document.createElement("div");
-//   let score = document.createElement("p");
-//   let hiScore = document.createElement("p");
-//   score.value = score;
-//   hiScore.value = hiScore;
-//   scoreBoard.appendChild(score);
-//   scoreBoard.appendChild(hiScore);
-//   gameBoard.appendChild(scoreBoard);
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** Flip a card face-up. */
-
-function flipCard(card) {
-
+  containerScore.appendChild(scoreDiv);
+  containerGame.appendChild(gameDiv);
+  let backgroundDiv = document.getElementById("background");
+  backgroundDiv.appendChild(containerScore);
+  backgroundDiv.appendChild(containerGame);
 }
 
-/** Flip a card face-down. */
-
-function unFlipCard(card) {
-  // ... you need to write this ...
-}
-
-/** Handle clicking on a card: this could be first-card or second-card. */
-
-// function handleCardClick(evt) {
-//   // ... you need to write this ...
-// }
