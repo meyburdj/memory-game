@@ -3,20 +3,22 @@
 /** Memory game: find matching pairs of cards and flip both of them. */
 
 const FOUND_MATCH_WAIT_MSECS = 1000;
-const COLORS = [
-  "red", "blue", "green", "orange", "purple",
-  "red", "blue", "green", "orange", "purple",
+const IMAGES = [
+  "assets/smol_1.png", "assets/smol_2.png", "assets/smol_3.png",
+  "assets/smol_4.png", "assets/smol_5.png", "assets/smol_6.png",
+  "assets/smol_1.png", "assets/smol_2.png", "assets/smol_3.png",
+  "assets/smol_4.png", "assets/smol_5.png", "assets/smol_6.png"
 ];
 
-const colors = shuffle(COLORS);
+const images = shuffle(IMAGES);
 let score = 0;
 console.log(score)
 let scoreHi = 0;
 let time = 0;
 
-createCards(colors);
+createCards(images);
 createScoreBoard();
-console.log(colors);
+console.log(images);
 
 
 /** Shuffle array items in-place and return shuffled array. */
@@ -33,20 +35,24 @@ function shuffle(items) {
 
 //create cards. respond to first click, second click matchd, and second click unmatched.
 
-function createCards(colors) {
+function createCards(images) {
   const gameBoard = document.getElementById("game");
 
 
 
   let cardClicked = 0;
-  let cardColor = undefined;
+  let cardImage = undefined;
   let cardLast = undefined;
 
 
-  for (let color of colors) {
+  for (let image of images) {
     //create initial unflipped cards
-    const card = document.createElement("div");
-    card.style.backgroundColor = 'black';
+    const card = document.createElement("img");
+    let unflipImg = "assets/laser_cat.png"
+    card.src = unflipImg
+    card.style = "margin-bottom: 10px;"
+
+
 
     //create three click pathways
     card.addEventListener("click", handleCardClick)
@@ -54,33 +60,33 @@ function createCards(colors) {
 
       //action if first card flipped
       if (cardClicked === 0) {
-        card.style.backgroundColor = `${color}`;
-        cardColor = `${color}`
+        card.src = `${image}`;
+        cardImage = `${image}`
         cardClicked++
         cardLast = card;
         console.log(cardClicked);
-        console.log(cardColor);
+        console.log(cardImage);
         console.log(cardLast)
       }
 
       //if second card flipped isn't a match, unflip both
-      else if (cardClicked === 1 && cardColor !== color) {
-        card.style.backgroundColor = `${color}`;
+      else if (cardClicked === 1 && cardImage !== image) {
+        card.src = `${image}`;
         setTimeout(function () {
-          card.style.backgroundColor = "black";
-          cardLast.style.backgroundColor = "black";
-          cardColor = undefined;
+          card.src = unflipImg
+          cardLast.src = unflipImg;
+          cardImage = undefined;
           cardClicked = 0;
           cardLast = undefined;
         }, 1000);
       }
 
       //if second card flipped is a match leave flipped
-      else if (cardClicked === 1 && cardColor === color && card !== cardLast) {
-        card.style.backgroundColor = `${color}`;
+      else if (cardClicked === 1 && cardImage === image && card !== cardLast) {
+        card.src = `${image}`;
         card.removeEventListener("click", handleCardClick);
         cardLast.removeEventListener("click", handleCardClick);
-        cardColor = undefined;
+        cardImage = undefined;
         cardClicked = 0;
         cardLast = undefined;
       }
