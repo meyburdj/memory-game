@@ -89,7 +89,7 @@ function createCards(images) {
         lockBoard = true;
 
         card.src = `${image}`;
-        let angryCatSound = new Audio('assets/angry_cat.wav');
+        let angryCatSound = new Audio('assets/angry_cat.mp3');
         angryCatSound.volume = .5;
         angryCatSound.play();
         setTimeout(function () {
