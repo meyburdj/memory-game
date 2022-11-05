@@ -31,7 +31,6 @@ startBtn.addEventListener("click", () => {
   let startSequence = document.getElementById("start-sequence");
   startSequence.remove();
 })
-console.log(images);
 
 
 /** Shuffle array items in-place and return shuffled array. */
@@ -82,9 +81,7 @@ function createCards(images) {
         if (gameStart === 1) {
           setInterval(timerFunction, 1000);
         }
-        console.log(cardClicked);
-        console.log(cardImage);
-        console.log(cardLast)
+
       }
 
       //if second card flipped isn't a match, unflip both
@@ -121,7 +118,6 @@ function createCards(images) {
       }
 
       document.getElementById("score-text").innerHTML = "Guesses: " + score;
-      console.log(score);
 
     };
     gameBoard.appendChild(card);
