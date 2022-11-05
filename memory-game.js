@@ -80,7 +80,7 @@ function createCards(images) {
         cardLast = card;
         gameStart++;
         if (gameStart === 1) {
-          setInterval(function () { time++; document.getElementById("timer").innerHTML = "Time: " + time + " seconds" }, 1000);
+          setInterval(timerFunction, 1000);
         }
         console.log(cardClicked);
         console.log(cardImage);
@@ -92,6 +92,9 @@ function createCards(images) {
         lockBoard = true;
 
         card.src = `${image}`;
+        let angryCatSound = new Audio('assets/angry_cat.wav');
+        angryCatSound.volume = .5;
+        angryCatSound.play();
         setTimeout(function () {
           card.src = unflipImg
           cardLast.src = unflipImg;
@@ -106,6 +109,8 @@ function createCards(images) {
       //if second card flipped is a match leave flipped
       else if (cardClicked === 1 && cardImage === image && card !== cardLast) {
         card.src = `${image}`;
+        let happyCatSound = new Audio('assets/happy_cat.mp3');
+        happyCatSound.play();
         card.removeEventListener("click", handleCardClick);
         cardLast.removeEventListener("click", handleCardClick);
         cardImage = undefined;
@@ -113,9 +118,6 @@ function createCards(images) {
         cardLast = undefined;
         correctGuess++;
         score++;
-        if (correctGuess === 6) {
-          clearInterval(timer);
-        }
       }
 
       document.getElementById("score-text").innerHTML = "Guesses: " + score;
@@ -125,6 +127,15 @@ function createCards(images) {
     gameBoard.appendChild(card);
   }
 
+}
+
+
+function timerFunction() {
+  if (correctGuess === 6) {
+    return;
+  }
+  time++;
+  document.getElementById("timer").innerHTML = "Time: " + time + " seconds"
 }
 
 
